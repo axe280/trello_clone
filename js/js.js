@@ -6,7 +6,7 @@ document
   .forEach(Card.process);
 
 
-// create cardaw
+// create card
 document
   .querySelector('[data-action-addColumn]')
   .addEventListener('click', () => {
@@ -36,8 +36,4 @@ document
 
     Card.process(createdCard);
   });
-
-
-
-
 

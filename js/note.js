@@ -32,12 +32,40 @@ const Note = {
     }
   },
 
+  create() {
+    const createdNote = createOptElement({
+      elementTag: 'div',
+      classNamesSting: 'note',
+      attributeNames: [
+        {
+          name: 'draggable',
+          value: 'true'
+        },
+        {
+          name: 'data-note-id',
+          value: Note.idCounter
+        }
+      ]
+    });
+
+    Note.idCounter++;
+
+    // events for new note
+    Note.process(createdNote);
+
+    return createdNote;
+  },
+
   dragstart(event) {
+    event.stopPropagation();
+
     Note.dragged = this;
     this.classList.add('dragged');
   },
 
-  dragend() {
+  dragend(event) {
+    event.stopPropagation();
+
     Note.dragged = null;
     this.classList.remove('dragged');
 
@@ -49,42 +77,31 @@ const Note = {
   },
 
   dragenter() {
-    if (Card.dragged) {
-      return;
-    }
-
-    if (this === Note.dragged) {
+    if (!Note.dragged || this === Note.dragged) {
       return;
     }
 
     this.classList.add('under');
   },
 
-  dragover() {
+  dragover(event) {
     event.preventDefault();
 
-    if (Card.dragged) {
-      return;
-    }
-
-    if (this === Note.dragged) {
+    if (!Note.dragged || this === Note.dragged) {
       return;
     }
   },
 
   dragleave() {
-    if (this === Note.dragged) {
+    if (!Note.dragged || this === Note.dragged) {
       return;
     }
+
     this.classList.remove('under');
   },
 
   drop(event) {
-    if (Card.dragged) {
-      return;
-    }
-
-    if (this === Note.dragged) {
+    if (!Note.dragged || this === Note.dragged) {
       return;
     }
 
@@ -105,6 +122,7 @@ const Note = {
     //another card
     else {
       this.before(Note.dragged);
+      event.stopPropagation();
     }
   }
 };

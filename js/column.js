@@ -16,7 +16,11 @@ const Card = {
       });
 
     addNoteButton.addEventListener('click', () => {
-      Card.createNote(card);
+      const createdNote = Note.create();
+      card.querySelector('[data-notes]').append(createdNote);
+
+      let dblClick = new Event('dblclick');
+      createdNote.dispatchEvent(dblClick);
     });
 
     card.addEventListener('dragstart', Card.dragstart);
@@ -25,33 +29,6 @@ const Card = {
     card.addEventListener('dragover', Card.dragover);
     card.addEventListener('dragleave', Card.dragleave);
     card.addEventListener('drop', Card.drop);
-  },
-
-  createNote(card) {
-    const createdNote = createOptElement({
-      elementTag: 'div',
-      classNamesSting: 'note',
-      attributeNames: [
-        {
-          name: 'draggable',
-          value: 'true'
-        },
-        {
-          name: 'data-note-id',
-          value: Note.idCounter
-        }
-      ]
-    });
-
-    Note.idCounter++;
-
-    card.querySelector('[data-notes]').append(createdNote);
-
-    // events for new note
-    Note.process(createdNote);
-
-    let dblClick = new Event('dblclick');
-    createdNote.dispatchEvent(dblClick);
   },
 
   headerEditable(cardHeader) {
@@ -66,11 +43,7 @@ const Card = {
     });
   },
 
-  dragstart() {
-    if (Note.dragged) {
-      return;
-    }
-
+  dragstart(event) {
     Card.dragged = this;
     this.classList.add('dragged');
   },
@@ -87,23 +60,15 @@ const Card = {
   },
 
   dragenter() {
-    if (Note.dragged) {
-      return;
-    }
-
-    if (this === Card.dragged) {
+    if (!Card.dragged || this === Card.dragged) {
       return;
     }
   },
 
-  dragover() {
+  dragover(event) {
     event.preventDefault();
 
-    if (Note.dragged) {
-      return;
-    }
-
-    if (this === Card.dragged) {
+    if (!Card.dragged || this === Card.dragged) {
       return;
     }
 
@@ -111,32 +76,27 @@ const Card = {
   },
 
   dragleave() {
-    if (this === Card.dragged) {
+    if (!Card.dragged || this === Card.dragged) {
       return;
     }
     this.classList.remove('under');
   },
 
   drop(event) {
-    event.stopPropagation();
-
     if (Note.dragged) {
       this.querySelector('[data-notes]').append(Note.dragged);
-      return;
     }
 
-    if (this === Card.dragged) {
-      return;
-    }
+    if (Card.dragged) {
+      const cards = Array.from(document.querySelectorAll('.column'));
+      const indexA = cards.indexOf(this);
+      const indexB = cards.indexOf(Card.dragged);
 
-    const cards = Array.from(document.querySelectorAll('.column'));
-    const indexA = cards.indexOf(this);
-    const indexB = cards.indexOf(Card.dragged);
-
-    if (indexA < indexB) {
-      this.before(Card.dragged);
-    } else {
-      this.after(Card.dragged);
+      if (indexA < indexB) {
+        this.before(Card.dragged);
+      } else {
+        this.after(Card.dragged);
+      }
     }
   }
 };
