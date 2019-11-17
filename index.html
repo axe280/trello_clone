@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Trello clone</title>
+
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+  <meta name="format-detection" content="telephone=no">
+
+  <link rel="stylesheet" href="css/main.css">
+  <script>
+      document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="columns">
+        <div class="column" draggable="true" data-column="1">
+          <p class="column-header">В плане</p>
+          <div data-notes>
+            <div class="note" draggable="true" data-note-id="1">Пункт 1</div>
+            <div class="note" draggable="true" data-note-id="2">Пункт 2</div>
+            <div class="note" draggable="true" data-note-id="3">Пункт 3</div>
+          </div>
+          <p class="column-footer">
+            <span data-action-addNote class="action">+ Добавить карточку</span>
+          </p>
+        </div>
+
+        <div class="column" draggable="true" data-column="2">
+          <p class="column-header">В плане</p>
+          <div data-notes>
+            <div class="note" draggable="true" data-note-id="4">Пункт 4</div>
+            <div class="note" draggable="true" data-note-id="5">Пункт 5</div>
+            <div class="note" draggable="true" data-note-id="6">Пункт 6</div>
+          </div>
+          <p class="column-footer">
+            <span data-action-addNote class="action">+ Добавить карточку</span>
+          </p>
+        </div>
+
+        <div class="column" draggable="true" data-column="3">
+          <p class="column-header">В плане</p>
+          <div data-notes>
+            <div class="note" draggable="true" data-note-id="7">Пункт 7</div>
+            <div class="note" draggable="true" data-note-id="8">Пункт 8</div>
+          </div>
+          <p class="column-footer">
+            <span data-action-addNote class="action">+ Добавить карточку</span>
+          </p>
+        </div>
+      </div>
+
+
+      <div class="adder">
+        <span data-action-addColumn class="action">+ Добавить колонку</span>
+      </div>
+    </div>
+  </div>
+
+  
+  <script src="js/helpers.js"></script>
+  <script src="js/row.js"></script>
+  <script src="js/column.js"></script>
+  <script src="js/note.js"></script>
+  <script src="js/js.js"></script>
+
+</body>
+
+</html>
