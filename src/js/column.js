@@ -31,6 +31,30 @@ const Card = {
     card.addEventListener('drop', Card.drop);
   },
 
+  create({id = null, title = 'Title'}) {
+    // create card
+    const createdCard = document.createElement('div');
+    createdCard.classList.add('column');
+    createdCard.setAttribute('draggable', 'true');
+
+    if (id){
+      createdCard.setAttribute('data-column', id);
+    } else {
+      createdCard.setAttribute('data-column', Card.idCounter);
+      Card.idCounter++;
+    }
+
+    createdCard.innerHTML = `<p class="column-header">${title}</p>
+        <div data-notes></div>
+        <p class="column-footer">
+          <span data-action-addNote class="action">+ Добавить карточку</span>
+        </p>`
+
+    Card.process(createdCard);
+
+    return createdCard;
+  },
+
   headerEditable(cardHeader) {
     cardHeader.addEventListener('dblclick', () => {
       cardHeader.setAttribute('contenteditable', 'true');
@@ -40,6 +64,8 @@ const Card = {
 
     cardHeader.addEventListener('blur', () => {
       cardHeader.removeAttribute('contenteditable');
+
+      Application.save();
     });
   },
 
@@ -57,6 +83,8 @@ const Card = {
       .forEach(card => {
         card.classList.remove('under');
       })
+
+    Application.save();
   },
 
   dragenter() {

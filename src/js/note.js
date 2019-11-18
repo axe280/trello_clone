@@ -30,25 +30,23 @@ const Note = {
     if (!this.textContent.trim().length) {
       this.remove();
     }
+
+    Application.save();
   },
 
-  create() {
-    const createdNote = createOptElement({
-      elementTag: 'div',
-      classNamesSting: 'note',
-      attributeNames: [
-        {
-          name: 'draggable',
-          value: 'true'
-        },
-        {
-          name: 'data-note-id',
-          value: Note.idCounter
-        }
-      ]
-    });
+  create(id = null, content = '') {
+    const createdNote = document.createElement('div');
 
-    Note.idCounter++;
+    createdNote.classList.add('note');
+    createdNote.setAttribute('draggable', 'true');
+    createdNote.textContent = content;
+
+    if (id) {
+      createdNote.setAttribute('data-note-id', id);
+    } else {
+      createdNote.setAttribute('data-note-id', Note.idCounter);
+      Note.idCounter++;
+    }
 
     // events for new note
     Note.process(createdNote);
@@ -74,6 +72,8 @@ const Note = {
       .forEach(note => {
         note.classList.remove('under');
       })
+
+    Application.save();
   },
 
   dragenter() {
