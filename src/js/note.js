@@ -1,71 +1,66 @@
-const Note = {
-  idCounter: 9,
-  dragged: null,
+class Note {
+  constructor (id = null, content = '') {
+    const element = this.element = document.createElement('div');
 
-  process(note) {
-    note.addEventListener('dblclick', Note.dblclick);
-    note.addEventListener('blur', Note.blur);
-
-    note.addEventListener('dragstart', Note.dragstart);
-    note.addEventListener('dragend', Note.dragend);
-    note.addEventListener('dragenter', Note.dragenter);
-    note.addEventListener('dragover', Note.dragover);
-    note.addEventListener('dragleave', Note.dragleave);
-    note.addEventListener('drop', Note.drop);
-  },
-
-  dblclick() {
-    this.setAttribute('contenteditable', 'true');
-    this.removeAttribute('draggable');
-    this.closest('.column').removeAttribute('draggable');
-    selectedInnerText(this);
-    this.focus();
-  },
-
-  blur() {
-    this.removeAttribute('contenteditable');
-    this.setAttribute('draggable', 'true');
-    this.closest('.column').setAttribute('draggable', 'true');
-
-    if (!this.textContent.trim().length) {
-      this.remove();
-    }
-
-    Application.save();
-  },
-
-  create(id = null, content = '') {
-    const createdNote = document.createElement('div');
-
-    createdNote.classList.add('note');
-    createdNote.setAttribute('draggable', 'true');
-    createdNote.textContent = content;
+    element.classList.add('note');
+    element.setAttribute('draggable', 'true');
+    element.textContent = content;
 
     if (id) {
-      createdNote.setAttribute('data-note-id', id);
+      element.setAttribute('data-note-id', id);
     } else {
-      createdNote.setAttribute('data-note-id', Note.idCounter);
+      element.setAttribute('data-note-id', Note.idCounter);
       Note.idCounter++;
     }
 
     // events for new note
-    Note.process(createdNote);
+    element.addEventListener('dblclick', this.dblclick.bind(this));
+    element.addEventListener('blur', this.blur.bind(this));
 
-    return createdNote;
-  },
+    element.addEventListener('dragstart', this.dragstart.bind(this));
+    element.addEventListener('dragend', this.dragend.bind(this));
+    element.addEventListener('dragenter', this.dragenter.bind(this));
+    element.addEventListener('dragover', this.dragover.bind(this));
+    element.addEventListener('dragleave', this.dragleave.bind(this));
+    element.addEventListener('drop', this.drop.bind(this));
+  }
+
+  get card () {
+    return this.element.closest('.column');
+  }
+
+  dblclick() {
+    this.element.setAttribute('contenteditable', 'true');
+    this.element.removeAttribute('draggable');
+    this.card.removeAttribute('draggable');
+    selectedInnerText(this.element);
+    this.element.focus();
+  }
+
+  blur() {
+    this.element.removeAttribute('contenteditable');
+    this.element.setAttribute('draggable', 'true');
+    this.card.setAttribute('draggable', 'true');
+
+    if (!this.element.textContent.trim().length) {
+      this.element.remove();
+    }
+
+    Application.save();
+  }
 
   dragstart(event) {
     event.stopPropagation();
 
-    Note.dragged = this;
-    this.classList.add('dragged');
-  },
+    Note.dragged = this.element;
+    this.element.classList.add('dragged');
+  }
 
   dragend(event) {
     event.stopPropagation();
 
     Note.dragged = null;
-    this.classList.remove('dragged');
+    this.element.classList.remove('dragged');
 
     document
       .querySelectorAll('.note')
@@ -74,55 +69,58 @@ const Note = {
       })
 
     Application.save();
-  },
+  }
 
   dragenter() {
-    if (!Note.dragged || this === Note.dragged) {
+    if (!Note.dragged || this.element === Note.dragged) {
       return;
     }
 
-    this.classList.add('under');
-  },
+    this.element.classList.add('under');
+  }
 
   dragover(event) {
     event.preventDefault();
 
-    if (!Note.dragged || this === Note.dragged) {
+    if (!Note.dragged || this.element === Note.dragged) {
       return;
     }
-  },
+  }
 
   dragleave() {
-    if (!Note.dragged || this === Note.dragged) {
+    if (!Note.dragged || this.element === Note.dragged) {
       return;
     }
 
-    this.classList.remove('under');
-  },
+    this.element.classList.remove('under');
+  }
 
   drop(event) {
-    if (!Note.dragged || this === Note.dragged) {
+    if (!Note.dragged || this.element === Note.dragged) {
       return;
     }
 
     //the same card
-    if (this.parentElement === Note.dragged.parentElement) {
-      const notes = Array.from(this.parentElement.querySelectorAll('.note'));
-      const indexA = notes.indexOf(this);
+    if (this.element.parentElement === Note.dragged.parentElement) {
+      const notes = Array.from(this.element.parentElement.querySelectorAll('.note'));
+      const indexA = notes.indexOf(this.element);
       const indexB = notes.indexOf(Note.dragged);
 
       if (indexA < indexB) {
-        this.before(Note.dragged);
+        this.element.before(Note.dragged);
       } else {
-        this.after(Note.dragged);
+        this.element.after(Note.dragged);
       }
 
     } 
 
     //another card
     else {
-      this.before(Note.dragged);
+      this.element.before(Note.dragged);
       event.stopPropagation();
     }
   }
-};
+}
+
+Note.idCounter = 9;
+Note.dragged = null;

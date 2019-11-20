@@ -62,16 +62,15 @@ const Application = {
     const objectData = JSON.parse(localStorage.getItem('cards'));
     const getNoteById = id => objectData.notes.items.find(note => note.id === id);
 
-    for (const column of objectData.columns.items) {
-      const columnElement = Card.create(column);
+    for (const { id, noteIds, title } of objectData.columns.items) {
+      const card = new Card(id, title);
 
-      cardsWrapper.append(columnElement);
+      cardsWrapper.append(card.element);
 
-      for (const noteId of column.noteIds) {
-        const note = getNoteById(noteId);
-
-        const noteElement = Note.create(note.id, note.content);
-        columnElement.querySelector('[data-notes]').append(noteElement);
+      for (const noteId of noteIds) {
+        const { id, content } = getNoteById(noteId);
+        const note = new Note(id, content);
+        card.add(note);
       }
     }
   }

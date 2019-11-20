@@ -6,8 +6,8 @@ Application.load();
 document
   .querySelector('[data-action-addColumn]')
   .addEventListener('click', () => {
-    const card = Card.create();
-    document.querySelector('.columns').append(card);
+    const card = new Card();
+    document.querySelector('.columns').append(card.element);
 
     Application.save();
   });
