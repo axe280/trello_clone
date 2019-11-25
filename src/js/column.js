@@ -1,6 +1,6 @@
 class Card {
   constructor(id = null, title = 'Title') {
-    const instance = this;
+    const self = this;
     this.notes = [];
 
     const element = this.element = document.createElement('div');
@@ -21,23 +21,13 @@ class Card {
         </p>`;
 
     const addNoteButton = element.querySelector('[data-action-addNote]');
-    const cardHeader = element.querySelector('.column-header');
 
-    this.headerEditable(cardHeader);
-
-    // element
-    //   .querySelectorAll('.note')
-    //   .forEach(note => {
-    //     // events for existing notes
-    //     Note.process(note);
-    //   });
+    this.elemEditableChildClassName('.column-header');
 
     addNoteButton.addEventListener('click', function(event) {
       const note = new Note();
-      instance.add(note);
-
-      const dblClick = new Event('dblclick');
-      note.element.dispatchEvent(dblClick);
+      self.add(note);
+      note.dblclick();
     });
 
     element.addEventListener('dragstart', this.dragstart.bind(this));
@@ -52,21 +42,22 @@ class Card {
     for (const note of notes) {
       if (!this.notes.includes(note)) {
         this.notes.push(note);
-
         this.element.querySelector('[data-notes]').append(note.element);
       }
     }
   }
 
-  headerEditable(cardHeader) {
-    cardHeader.addEventListener('dblclick', () => {
-      cardHeader.setAttribute('contenteditable', 'true');
-      selectedInnerText(cardHeader);
-      cardHeader.focus();
+  elemEditableChildClassName(childClassName) {
+    const element = this.element.querySelector(childClassName);
+
+    element.addEventListener('dblclick', () => {
+      element.setAttribute('contenteditable', 'true');
+      selectedInnerText(element);
+      element.focus();
     });
 
-    cardHeader.addEventListener('blur', () => {
-      cardHeader.removeAttribute('contenteditable');
+    element.addEventListener('blur', () => {
+      element.removeAttribute('contenteditable');
 
       Application.save();
     });
@@ -90,7 +81,7 @@ class Card {
     Application.save();
   }
 
-  dragenter() {
+  dragenter(event) {
     if (!Card.dragged || this.element === Card.dragged) {
       return;
     }
@@ -132,5 +123,5 @@ class Card {
   }
 }
 
-Card.idCounter = 4;
+Card.idCounter = 1;
 Card.dragged = null;

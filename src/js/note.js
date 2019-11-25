@@ -13,7 +13,6 @@ class Note {
       Note.idCounter++;
     }
 
-    // events for new note
     element.addEventListener('dblclick', this.dblclick.bind(this));
     element.addEventListener('blur', this.blur.bind(this));
 
@@ -122,5 +121,5 @@ class Note {
   }
 }
 
-Note.idCounter = 9;
+Note.idCounter = 1;
 Note.dragged = null;

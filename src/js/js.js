@@ -1,7 +1,8 @@
 'use strict';
-// console.log(a);
 
 Application.load();
+
+new Bin();
 
 document
   .querySelector('[data-action-addColumn]')

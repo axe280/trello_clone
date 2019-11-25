@@ -87,3 +87,21 @@ body {
 .note.under {
   background-color: #000;
 }
+
+.bin {
+  position: fixed;
+  z-index: 20;
+  left: 5px;
+  bottom: 5px;
+  width: 160px;
+  height: 160px;
+  background-image: url('../img/trash.svg');
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: 80px 80px;
+  opacity: 0.3;
+}
+
+.bin_hover {
+  opacity: 1;
+}

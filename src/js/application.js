@@ -16,20 +16,20 @@ const Application = {
 
     document
       .querySelectorAll('.column')
-      .forEach(columnElement => {
-        const column = {
-          title: columnElement.querySelector('.column-header').textContent,
-          id: parseInt(columnElement.getAttribute('data-column')),
+      .forEach(cardElement => {
+        const card = {
+          title: cardElement.querySelector('.column-header').textContent,
+          id: parseInt(cardElement.getAttribute('data-column')),
           noteIds: []
         }
 
-        columnElement
+        cardElement
           .querySelectorAll('.note')
           .forEach(noteElement => {
-            column.noteIds.push(parseInt(noteElement.getAttribute('data-note-id')));
+            card.noteIds.push(parseInt(noteElement.getAttribute('data-note-id')));
           });
 
-        objectData.columns.items.push(column);
+        objectData.columns.items.push(card);
       });
 
 
@@ -73,6 +73,9 @@ const Application = {
         card.add(note);
       }
     }
+
+    Card.idCounter = objectData.columns.idCounter;
+    Note.idCounter = objectData.notes.idCounter;
   }
 
 };
